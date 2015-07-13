@@ -2,15 +2,26 @@
  * Created by Daniel on 2015-07-12.
  */
 public class AlphaPixel extends Pixel {
-    int alpha;
+    byte alpha;
 
-    public AlphaPixel(int red, int green, int blue, int alpha) {
+    public AlphaPixel(byte red, byte green, byte blue, byte alpha) {
         super(red, green, blue);
         this.alpha = alpha;
     }
 
-    public int getAlpha() {
+    public byte getAlpha() {
         return alpha;
+    }
+
+    public void setAlpha(byte alpha) {
+        this.alpha = alpha;
+    }
+
+    @Override
+    public int getRGB() {
+        int value = super.getRGB();
+        value += (((int) alpha & 0xff) << 24 );
+        return value;
     }
 
     @Override

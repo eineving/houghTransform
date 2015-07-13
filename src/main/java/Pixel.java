@@ -2,24 +2,44 @@
  * Created by Daniel on 2015-07-12.
  */
 public class Pixel {
-    int red, green, blue;
+    byte red, green, blue;
 
-    public Pixel(int red, int green, int blue) {
+    public Pixel(byte red, byte green, byte blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;
     }
 
-    public int getRed() {
+    public byte getRed() {
         return red;
     }
 
-    public int getGreen() {
+    public byte getGreen() {
         return green;
     }
 
-    public int getBlue() {
+    public byte getBlue() {
         return blue;
+    }
+
+    public void setRed(byte red) {
+        this.red = red;
+    }
+
+    public void setGreen(byte green) {
+        this.green = green;
+    }
+
+    public void setBlue(byte blue) {
+        this.blue = blue;
+    }
+
+    public int getRGB(){
+
+        int value= ((int) blue & 0xff);
+        value += (((int) green & 0xff) << 8);
+        value += (((int) red & 0xff) << 16);
+        return value;
     }
 
     @Override

@@ -1,3 +1,5 @@
+package image;
+
 /**
  * Created by Daniel on 2015-07-12.
  */
@@ -66,7 +68,7 @@ public class Pixel {
 
     @Override
     public String toString() {
-        return "Pixel{" +
+        return "image.Pixel{" +
                 "red=" + red +
                 ", green=" + green +
                 ", blue=" + blue +

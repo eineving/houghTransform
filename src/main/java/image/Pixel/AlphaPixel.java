@@ -1,4 +1,4 @@
-package image;
+package image.Pixel;
 
 /**
  * Created by Daniel on 2015-07-12.
@@ -48,7 +48,7 @@ public class AlphaPixel extends Pixel {
 
     @Override
     public String toString() {
-        return "image.AlphaPixel{" +
+        return "image.Pixel.AlphaPixel{" +
                 "alpha=" + alpha +
                 ", red=" + red +
                 ", green=" + green +

@@ -1,17 +1,12 @@
-import image.AlphaPixel;
+import image.Image;
 import image.Line;
-import image.Pixel;
-import image.PixelRaster;
+import image.Pixel.PixelRaster;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
-import java.awt.image.SampleModel;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -26,17 +21,21 @@ public class HoughTransform {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Image golfImage = new Image(image);
 
-        PixelRaster raster = new PixelRaster(image);
-        BufferedImage fixed = null;
-        try {
-            fixed = createImage(raster);
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (int col = 1, row = 1; row <= golfImage.getHeight(); col++) {
+
+            golfImage.setPixel(col, row, (byte) 0, (byte) 100, (byte) 0);
+            if (col == golfImage.getWidth()) {
+                row++;
+                col = 1;
+            }
         }
 
+        BufferedImage fixed = golfImage.getBufferedImage();
+
         try {
-            ImageIO.write(fixed, "jpg", new File("C:\\Users\\Daniel\\code\\output.jpg"));
+            ImageIO.write(fixed, "jpg", new File("C:\\Users\\Daniel\\code\\output2.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,6 +61,7 @@ public class HoughTransform {
         return image;
     }
 
+    /*
     private BufferedImage createImage(PixelRaster pixels, int bufferedImageType) throws IOException {
 
         BufferedImage image = new BufferedImage(pixels.getWidth(), pixels.getHeight(), bufferedImageType);
@@ -81,9 +81,14 @@ public class HoughTransform {
     private BufferedImage createImage(PixelRaster pixels) throws IOException {
         return createImage(pixels, BufferedImage.TYPE_3BYTE_BGR);
     }
-
+*/
     public static void main(String[] args) {
+
         //TODO temporary main
+        System.out.println("Starting application ...");
+        long start = System.currentTimeMillis();
         new HoughTransform();
+        System.out.println("Finished!");
+        System.out.println("Runtime: " + (System.currentTimeMillis()-start) + "ms");
     }
 }

@@ -2,6 +2,7 @@ package image;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
 
 /**
  * Image
@@ -13,8 +14,8 @@ public class Image {
 
 
     public Image(BufferedImage bufferedImage) {
-        data = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-        alphaRaster = bufferedImage.getAlphaRaster() != null;
+        this.data = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+        this.alphaRaster = bufferedImage.getAlphaRaster() != null;
         this.width = bufferedImage.getWidth();
         this.height = bufferedImage.getHeight();
 
@@ -37,5 +38,92 @@ public class Image {
 
     public int getHeight() {
         return height;
+    }
+
+    /**
+     * Get the pixel values as a byte array as BGR
+     *
+     * @param x column
+     * @param y row
+     * @return byte array with BGR value
+     */
+    public byte[] getPixel(int x, int y) {
+        int index = 0;
+        int pixelSize;
+        if (alphaRaster) {
+            pixelSize = 4;
+        } else {
+            pixelSize = 3;
+        }
+        if (y > 1) {
+            index += (y - 1) * width * pixelSize;
+        }
+        index += (x - 1) * pixelSize;
+        byte[] values = new byte[pixelSize];
+        System.arraycopy(data, index, values, 0, pixelSize);
+        return values;
+    }
+
+    public void setPixel(int x, int y, byte blue, byte green, byte red) {
+        int index = 0;
+
+        int pixelSize, alphaTick;
+        if (alphaRaster) {
+            pixelSize = 4;
+            alphaTick = 1;
+        } else {
+            pixelSize = 3;
+            alphaTick = 0;
+        }
+        if (y > 1) {
+            index += (y - 1) * width * pixelSize;
+        }
+        index += (x - 1) * pixelSize;
+
+        //System.out.println("Index: " + index);
+        data[index + alphaTick] = blue;
+        data[index + alphaTick + 1] = green;
+        data[index + alphaTick + 2] = red;
+    }
+
+    public byte getPixelValue(int x, int y, PixelDataType type) {
+        byte[] values = getPixel(x, y);
+
+        if (alphaRaster) {
+            switch (type) {
+                case ALPHA:
+                    return values[0];
+                case RED:
+                    return values[3];
+                case GREEN:
+                    return values[2];
+                case BLUE:
+                    return values[1];
+            }
+        } else {
+            switch (type) {
+                case RED:
+                    return values[2];
+                case GREEN:
+                    return values[1];
+                case BLUE:
+                    return values[0];
+            }
+        }
+        //Should not happen
+        return -1;
+    }
+
+    public BufferedImage getBufferedImage() {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        byte[] imgData = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+
+        System.arraycopy(data, 0, imgData, 0, data.length);
+        return image;
+    }
+
+
+    public enum PixelDataType {
+        RED, GREEN, BLUE, ALPHA
     }
 }

@@ -1,6 +1,5 @@
-package image;
+package image.Pixel;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 

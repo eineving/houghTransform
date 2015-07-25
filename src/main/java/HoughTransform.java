@@ -23,12 +23,12 @@ public class HoughTransform {
         }
         Image golfImage = new Image(image);
 
-        for (int col = 1, row = 1; row <= golfImage.getHeight(); col++) {
+        for (int col = 0, row = 0; row < golfImage.getHeight(); col++) {
 
             golfImage.setPixel(col, row, (byte) 0, (byte) 100, (byte) 0);
-            if (col == golfImage.getWidth()) {
+            if (col+1 == golfImage.getWidth()) {
                 row++;
-                col = 1;
+                col = 0;
             }
         }
 

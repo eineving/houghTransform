@@ -76,9 +76,9 @@ public class Image {
             alphaTick = 0;
         }
         if (y > 1) {
-            index += (y - 1) * width * pixelSize;
+            index += y  * width * pixelSize;
         }
-        index += (x - 1) * pixelSize;
+        index += x * pixelSize;
 
         //System.out.println("Index: " + index);
         data[index + alphaTick] = blue;

@@ -2,7 +2,7 @@ package image;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
+import java.util.List;
 
 /**
  * Image
@@ -11,7 +11,6 @@ public class Image {
     private byte data[];
     private boolean alphaRaster;
     private int width, height;
-
 
     public Image(BufferedImage bufferedImage) {
         this.data = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
@@ -50,15 +49,16 @@ public class Image {
     public byte[] getPixel(int x, int y) {
         int index = 0;
         int pixelSize;
+
         if (alphaRaster) {
             pixelSize = 4;
         } else {
             pixelSize = 3;
         }
         if (y > 1) {
-            index += (y - 1) * width * pixelSize;
+            index += y * width * pixelSize;
         }
-        index += (x - 1) * pixelSize;
+        index += x * pixelSize;
         byte[] values = new byte[pixelSize];
         System.arraycopy(data, index, values, 0, pixelSize);
         return values;
@@ -76,7 +76,7 @@ public class Image {
             alphaTick = 0;
         }
         if (y > 1) {
-            index += y  * width * pixelSize;
+            index += y * width * pixelSize;
         }
         index += x * pixelSize;
 
@@ -122,6 +122,28 @@ public class Image {
         return image;
     }
 
+    public void applyPixelChange(PixelValueChanger changer) {
+        if (alphaRaster) {
+            //TODO implement
+        } else {
+            for (int i = 0; i < data.length; i += 3) {
+                byte [] newData = changer.changePixelValues(data[i], data[i+1], data[i+2]);
+                System.arraycopy(newData,0,data,i,3);
+            }
+        }
+
+    }
+
+    /*
+    public List<Circle> getBalls(){
+        PixelAnalyser whiteSpot = new PixelAnalyser() {
+            @Override
+            public boolean fullFillsCondition(byte blue, byte green, byte red) {
+                return false;
+            }
+        }
+    }
+    */
 
     public enum PixelDataType {
         RED, GREEN, BLUE, ALPHA

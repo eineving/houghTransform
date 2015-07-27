@@ -1,10 +1,9 @@
 import image.Image;
 import image.Line;
-import image.Pixel.PixelRaster;
+import image.PixelValueChanger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -23,15 +22,28 @@ public class HoughTransform {
         }
         Image golfImage = new Image(image);
 
-        for (int col = 0, row = 0; row < golfImage.getHeight(); col++) {
+        golfImage.applyPixelChange(new PixelValueChanger() {
+            @Override
+            public byte[] changePixelValues(byte blue, byte green, byte red) {
+                //Convert to greyscale by average
+                byte avg;
+                int sum = 0;
+                sum+= unsignedToInt(blue);
+                sum+= unsignedToInt(green);
+                sum+= unsignedToInt(red);
 
-            golfImage.setPixel(col, row, (byte) 0, (byte) 100, (byte) 0);
-            if (col+1 == golfImage.getWidth()) {
-                row++;
-                col = 0;
+                avg = (byte) (sum / 3);
+
+                //System.out.println("avg: " +  avg);
+                byte[] values = new byte[3];
+
+                values[0] = avg;
+                values[1] = avg;
+                values[2] = avg;
+
+                return values;
             }
-        }
-
+        });
         BufferedImage fixed = golfImage.getBufferedImage();
 
         try {
@@ -49,39 +61,6 @@ public class HoughTransform {
 
     }
 
-
-    private BufferedImage noGreenImage(PixelRaster raster) {
-        BufferedImage image = new BufferedImage(raster.getWidth(), raster.getHeight(), BufferedImage.TYPE_INT_RGB);
-        for (int x = 0; x < raster.getWidth(); x++) {
-            for (int y = 0; y < raster.getHeight(); y++) {
-                raster.getPixel(x, y).setGreen((byte) 0);
-                image.setRGB(x, y, raster.getPixel(x, y).getRGB());
-            }
-        }
-        return image;
-    }
-
-    /*
-    private BufferedImage createImage(PixelRaster pixels, int bufferedImageType) throws IOException {
-
-        BufferedImage image = new BufferedImage(pixels.getWidth(), pixels.getHeight(), bufferedImageType);
-        int bands = 3;
-        if (pixels.hasAlphaRaster()) {
-            bands = 4;
-        }
-        byte[] imgData = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-        byte[] rawData = pixels.rawData();
-
-        System.arraycopy(rawData, 0, imgData, 0, rawData.length);
-
-        return image;
-
-    }
-
-    private BufferedImage createImage(PixelRaster pixels) throws IOException {
-        return createImage(pixels, BufferedImage.TYPE_3BYTE_BGR);
-    }
-*/
     public static void main(String[] args) {
 
         //TODO temporary main
@@ -89,6 +68,10 @@ public class HoughTransform {
         long start = System.currentTimeMillis();
         new HoughTransform();
         System.out.println("Finished!");
-        System.out.println("Runtime: " + (System.currentTimeMillis()-start) + "ms");
+        System.out.println("Runtime: " + (System.currentTimeMillis() - start) + "ms");
+    }
+
+    private int unsignedToInt(byte b) {
+        return b & 0xFF;
     }
 }

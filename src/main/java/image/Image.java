@@ -134,17 +134,6 @@ public class Image {
 
     }
 
-    /*
-    public List<Circle> getBalls(){
-        PixelAnalyser whiteSpot = new PixelAnalyser() {
-            @Override
-            public boolean fullFillsCondition(byte blue, byte green, byte red) {
-                return false;
-            }
-        }
-    }
-    */
-
     public enum PixelDataType {
         RED, GREEN, BLUE, ALPHA
     }

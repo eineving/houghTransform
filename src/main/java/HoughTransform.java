@@ -20,17 +20,17 @@ public class HoughTransform {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Image golfImage = new Image(image);
+        Image greyscale = new Image(image);
 
-        golfImage.applyPixelChange(new PixelValueChanger() {
+        greyscale.applyPixelChange(new PixelValueChanger() {
             @Override
             public byte[] changePixelValues(byte blue, byte green, byte red) {
                 //Convert to greyscale by average
                 byte avg;
                 int sum = 0;
-                sum+= unsignedToInt(blue);
-                sum+= unsignedToInt(green);
-                sum+= unsignedToInt(red);
+                sum += unsignedToInt(blue);
+                sum += unsignedToInt(green);
+                sum += unsignedToInt(red);
 
                 avg = (byte) (sum / 3);
 
@@ -44,14 +44,43 @@ public class HoughTransform {
                 return values;
             }
         });
-        BufferedImage fixed = golfImage.getBufferedImage();
+        BufferedImage fixedGreyscale = greyscale.getBufferedImage();
 
         try {
-            ImageIO.write(fixed, "jpg", new File("C:\\Users\\Daniel\\code\\output2.jpg"));
+            ImageIO.write(fixedGreyscale, "jpg", new File("C:\\Users\\Daniel\\code\\greyscale.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        Image binary = new Image(image);
+        binary.applyPixelChange(new PixelValueChanger() {
+            @Override
+            public byte[] changePixelValues(byte blue, byte green, byte red) {
+                //Creating binary image
+                byte[] values = new byte[3];
+                int sum = unsignedToInt(blue);
+                sum+=unsignedToInt(green);
+                sum+=unsignedToInt(red);
+
+
+                byte value=0;
+
+                //TODO remove hard code 600
+                if(sum>600){
+                    value= (byte) 0xFF;
+                }
+
+                for(int i = 0; i<3; i++){
+                    values[i]=value;
+                }
+                return values;
+            }
+        });
+        try {
+            ImageIO.write(binary.getBufferedImage(), "jpg", new File("C:\\Users\\Daniel\\code\\noGreen.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Line> findLines(BufferedImage image) {

@@ -16,7 +16,7 @@ public class HoughTransform {
     public HoughTransform() {
         BufferedImage image = null;
         try {
-            image = ImageIO.read(new File("C:\\Users\\Daniel\\code\\houghTransform\\src\\main\\resources\\References\\20150613_110956221_iOS.jpg"));
+            image = ImageIO.read(new File("C:\\Users\\Daniel\\code\\houghTransform\\src\\main\\resources\\References\\20150613_111004302_iOS.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }

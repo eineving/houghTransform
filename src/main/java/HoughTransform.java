@@ -16,7 +16,7 @@ public class HoughTransform {
     public HoughTransform() {
         BufferedImage image = null;
         try {
-            image = ImageIO.read(new File("C:\\Users\\Daniel\\code\\houghTransform\\src\\main\\resources\\References\\20150613_111004302_iOS.jpg"));
+            image = ImageIO.read(new File("C:\\Users\\danie\\code\\houghTransform\\src\\main\\resources\\References\\20150613_111004302_iOS.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,7 +47,7 @@ public class HoughTransform {
         BufferedImage fixedGreyscale = greyscale.getBufferedImage();
 
         try {
-            ImageIO.write(fixedGreyscale, "jpg", new File("C:\\Users\\Daniel\\code\\greyscale.jpg"));
+            ImageIO.write(fixedGreyscale, "jpg", new File("C:\\Users\\danie\\code\\greyscale.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,8 +76,10 @@ public class HoughTransform {
                 return values;
             }
         });
+
+        binary.createBinaryOutline();
         try {
-            ImageIO.write(binary.getBufferedImage(), "jpg", new File("C:\\Users\\Daniel\\code\\noGreen.jpg"));
+            ImageIO.write(binary.getBufferedImage(), "jpg", new File("C:\\Users\\danie\\code\\noGreen.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }

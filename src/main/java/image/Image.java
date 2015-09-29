@@ -2,10 +2,12 @@ package image;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Image
+ * <p>
+ * columns and rows are have 1-indexation
  */
 public class Image {
     private byte data[];
@@ -37,6 +39,67 @@ public class Image {
 
     public int getHeight() {
         return height;
+    }
+
+    public void createBinaryOutline() {
+        ArrayList<Coordinates> border = new ArrayList<Coordinates>();
+        for (int x = 1; x < width; x++) {
+            for (int y = 1; y < height; y++) {
+                if (whitePixel(getPixel(x, y))) {
+                    if (blackNeighbour(x, y)) {
+                        border.add(new Coordinates(x, y));
+                    }
+                }
+            }
+        }
+        System.out.println("BorderSize: " + border.size());
+
+        for(int i =0;i<data.length; i++){
+            data[i] = 0;
+        }
+
+        for (Coordinates coordinate : border) {
+            setPixel(coordinate.getX(), coordinate.getY(), (byte) 0xFF, (byte) 0xFF, (byte) 0xFF);
+        }
+
+    }
+
+    private boolean blackNeighbour(int x, int y) {
+        boolean anyBlack = false;
+        for (int i = 0; i < 3; i++) {
+            if (!whiteOrNonExistingPixel(x - 1 + i, y - 1)) {
+                return true;
+            }
+            if (!whiteOrNonExistingPixel(x - 1 + i, y + 1)) {
+                return true;
+            }
+        }
+
+        if (!whiteOrNonExistingPixel(x - 1, y)) {
+            return true;
+        }
+        if (!whiteOrNonExistingPixel(x + 1, y)) {
+            return true;
+        }
+        return false;
+
+    }
+
+    private boolean whiteOrNonExistingPixel(int x, int y) {
+        if (x < 1 || x >= width || y < 1 || y >= height) {
+            return true;
+        }
+
+        return whitePixel(getPixel(x, y));
+    }
+
+    private boolean whitePixel(byte[] values) {
+        for (byte value : values) {
+            if ((value & 0xFF) != 255) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -127,8 +190,8 @@ public class Image {
             //TODO implement
         } else {
             for (int i = 0; i < data.length; i += 3) {
-                byte [] newData = changer.changePixelValues(data[i], data[i+1], data[i+2]);
-                System.arraycopy(newData,0,data,i,3);
+                byte[] newData = changer.changePixelValues(data[i], data[i + 1], data[i + 2]);
+                System.arraycopy(newData, 0, data, i, 3);
             }
         }
 

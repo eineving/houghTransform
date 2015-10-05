@@ -41,13 +41,51 @@ public class PixelArea {
     public List<Coordinates> getBorder() {
         List<Coordinates> border = new ArrayList<Coordinates>();
         for (int y = topPixel; y <= bottomPixel; y++) {
-            for(Integer x : map.get(y)){
+            for (Integer x : map.get(y)) {
                 border.add(new Coordinates(x.intValue(), y));
             }
         }
         return border;
     }
 
+    public boolean inArea(int x, int y) {
+        if (!map.containsKey(y)) {
+            return false;
+        }
+
+        int amountLeftOfPoint = 0;
+        int amountRightOfPoint = 0;
+
+        for (Integer i : map.get(y)) {
+            if (i == x) {
+                //Point is on the border and therefore in the object
+                return true;
+            } else if (i < x) {
+                amountLeftOfPoint++;
+            } else {
+                amountRightOfPoint++;
+            }
+        }
+
+        //TODO Fix this (issue #1)
+        return amountLeftOfPoint % 2 == 1 && amountRightOfPoint % 2 == 1;
+    }
+
+    public int getTopPixel() {
+        return topPixel;
+    }
+
+    public int getBottomPixel() {
+        return bottomPixel;
+    }
+
+    public int getRightMostPixel() {
+        return rightMostPixel;
+    }
+
+    public int getLeftMostPixel() {
+        return leftMostPixel;
+    }
 
     private class IntegerCompare implements Comparator {
 

@@ -74,7 +74,7 @@ public class HoughTransform {
             }
         });
 
-        binary.createBinaryOutline();
+        binary.applyBinaryOutline();
         try {
             ImageIO.write(binary.getBufferedImage(), "jpg", new File("C:\\Users\\danie\\code\\noGreen.jpg"));
         } catch (IOException e) {

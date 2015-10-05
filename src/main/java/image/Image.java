@@ -13,6 +13,7 @@ public class Image {
     private byte data[];
     private int width, height;
     private ArrayList<PixelArea> areas = new ArrayList<PixelArea>();
+    boolean[][] visited;
 
     public Image(BufferedImage bufferedImage) {
         this.data = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
@@ -45,18 +46,42 @@ public class Image {
 
     }
 
-    private void findBinaryOutline(){
+    private void findBinaryOutline() {
         //X-Y
-        boolean[][] visited = new boolean[width][height];
+        visited = new boolean[width][height];
 
         for (int x = 1; x < width; x++) {
             for (int y = 1; y < height; y++) {
+                if (!visited[x - 1][y - 1]) {
 
-
-
+                    if (whitePixel(getPixel(x, y))) {
+                        areas.add(getCompleteBorder(x, y));
+                    }
+                }
             }
         }
+    }
 
+    private ArrayList<Coordinates> getCompleteBorder(int x, int y) {
+        ArrayList<Coordinates> border = new ArrayList<Coordinates>();
+        //End of canvas
+        try {
+            visited[x - 1][y - 1] = true;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+            return border;
+        }
+
+        
+
+        if (isWhiteBorder(x, y)) {
+            border.add(new Coordinates(x, y));
+        }
+        if (!visited[x - 2][y - 1] && whitePixel(getPixel(x - 1, y))) {
+
+        }
+
+        return border;
     }
 
 
@@ -65,7 +90,7 @@ public class Image {
         for (int x = 1; x < width; x++) {
             for (int y = 1; y < height; y++) {
                 if (whitePixel(getPixel(x, y))) {
-                    if (blackNeighbour(x, y)) {
+                    if (isWhiteBorder(x, y)) {
                         border.add(new Coordinates(x, y));
                     }
                 }
@@ -82,8 +107,7 @@ public class Image {
         }
     }
 
-    private boolean blackNeighbour(int x, int y) {
-        boolean anyBlack = false;
+    private boolean isWhiteBorder(int x, int y) {
         for (int i = 0; i < 3; i++) {
             if (!whiteOrNonExistingPixel(x - 1 + i, y - 1)) {
                 return true;

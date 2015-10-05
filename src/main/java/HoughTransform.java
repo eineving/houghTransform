@@ -23,7 +23,6 @@ public class HoughTransform {
         Image greyscale = new Image(image);
 
         greyscale.applyPixelChange(new PixelValueChanger() {
-            @Override
             public byte[] changePixelValues(byte blue, byte green, byte red) {
                 //Convert to greyscale by average
                 byte avg;
@@ -54,24 +53,22 @@ public class HoughTransform {
 
         Image binary = new Image(image);
         binary.applyPixelChange(new PixelValueChanger() {
-            @Override
             public byte[] changePixelValues(byte blue, byte green, byte red) {
                 //Creating binary image
                 byte[] values = new byte[3];
                 int sum = unsignedToInt(blue);
-                sum+=unsignedToInt(green);
-                sum+=unsignedToInt(red);
+                sum += unsignedToInt(green);
+                sum += unsignedToInt(red);
 
-
-                byte value=0;
+                byte value = 0;
 
                 //TODO remove hard code 600
-                if(sum>600){
-                    value= (byte) 0xFF;
+                if (sum > 600) {
+                    value = (byte) 0xFF;
                 }
 
-                for(int i = 0; i<3; i++){
-                    values[i]=value;
+                for (int i = 0; i < 3; i++) {
+                    values[i] = value;
                 }
                 return values;
             }
